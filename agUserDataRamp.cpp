@@ -159,7 +159,8 @@ const char* InterpolationTypeNames[] =
    "None",
    "Linear",
    "Smooth",
-   "Spline"
+   "Spline",
+   NULL
 };
 
 bool SortPositions(AtArray *a, unsigned int *shuffle)
