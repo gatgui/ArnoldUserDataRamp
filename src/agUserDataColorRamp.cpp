@@ -1,6 +1,6 @@
-#include "agUserDataRamp.h"
+#include "agUserDataRampCommon.h"
 
-AI_SHADER_NODE_EXPORT_METHODS(agUserDataFloatRampMtd);
+AI_SHADER_NODE_EXPORT_METHODS(agUserDataColorRampMtd);
 
 enum FloatRampParams
 {
@@ -20,7 +20,7 @@ node_parameters
    AiParameterStr("values", "");
    AiParameterStr("interpolations", "");
    AiParameterEnum("default_interpolation", 1, InterpolationTypeNames);
-   AiParameterFlt("default_value", 0.0f);
+   AiParameterRGB("default_value", 1.0f, 0.0f, 1.0f);
    AiParameterBool("abort_on_error", false);
 };
 
@@ -42,24 +42,24 @@ static void Failed(AtShaderGlobals *sg, AtNode *node, const char *errMsg)
    {
       if (errMsg)
       {
-         AiMsgError("[userDataFloatRamp] %s", errMsg);
+         AiMsgError("[userDataColorRamp] %s", errMsg);
       }
       else
       {
-         AiMsgError("[userDataFloatRamp] Failed");
+         AiMsgError("[userDataColorRamp] Failed");
       }
    }
    else
    {
       if (errMsg)
       {
-         AiMsgWarning("[userDataFloatRamp] %s. Use default value", errMsg);
+         AiMsgWarning("[userDataColorRamp] %s. Use default value", errMsg);
       }
       else
       {
-         AiMsgWarning("[userDataFloatRamp] Failed. Use default value");
+         AiMsgWarning("[userDataColorRamp] Failed. Use default value");
       }
-      sg->out.FLT = AiShaderEvalParamFlt(p_default_value);
+      sg->out.RGB = AiShaderEvalParamRGB(p_default_value);
    }
 }
 
@@ -89,9 +89,9 @@ shader_evaluate
       return;
    }
    
-   if (v->type != AI_TYPE_FLOAT)
+   if (v->type != AI_TYPE_RGB)
    {
-      Failed(sg, node, "Values user attribute must be an array of floats");
+      Failed(sg, node, "Values user attribute must be an array of colors");
       return;
    }
    
@@ -122,5 +122,5 @@ shader_evaluate
    
    SortPositions(p, s);
    
-   EvalFloatRamp(p, v, i, defi, s, AiShaderEvalParamFlt(p_input), sg->out.FLT);
+   EvalColorRamp(p, v, i, defi, s, AiShaderEvalParamFlt(p_input), sg->out.RGB);
 }

@@ -1,4 +1,4 @@
-#include "agUserDataRamp.h"
+#include "agUserDataRampCommon.h"
 
 AI_SHADER_NODE_EXPORT_METHODS(agUserDataVectorRampMtd);
 
