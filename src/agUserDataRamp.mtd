@@ -1,12 +1,12 @@
 [node userDataVectorRamp]
-   maya.classification STRING "shader/utility"
+   maya.classification STRING "utility/userdata"
    maya.id INT 0x001165F3
 
 [node userDataFloatRamp]
-   maya.classification STRING "shader/utility"
+   maya.classification STRING "utility/userdata"
    maya.id INT 0x001165F4
 
 [node userDataColorRamp]
-   maya.classification STRING "shader/utility"
+   maya.classification STRING "utility/userdata"
    maya.id INT 0x001165F5
 
