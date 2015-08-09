@@ -1,4 +1,5 @@
 #include "agUserDataRampCommon.h"
+#include <algorithm>
 
 // ---
 
@@ -162,45 +163,40 @@ const char* InterpolationTypeNames[] =
    NULL
 };
 
-bool SortPositions(AtArray *a, unsigned int *shuffle)
+class ComparePositions
 {
-   bool modified = false;
+public:
+   
+   inline ComparePositions(AtArray *a)
+      : _a(a)
+   {
+   }
+   
+   inline bool operator()(unsigned int i0, unsigned int i1) const
+   {
+      return (AiArrayGetFlt(_a, i0) < AiArrayGetFlt(_a, i1));
+   }
+   
+private:
+   
+   AtArray *_a;
+};
 
+void SortPositions(AtArray *a, unsigned int *shuffle)
+{
    if (a && shuffle && a->nelements > 0)
    {
-      float p0, p1;
-      int tmp;
-
-      bool swapped = true;
       unsigned int n = a->nelements;
-
+      
       for (unsigned int i=0; i<n; ++i)
       {
          shuffle[i] = i;
       }
-
-      while (swapped)
-      {
-         swapped = false;
-         n -= 1;
-         for (unsigned int i=0; i<n; ++i)
-         {
-            p0 = AiArrayGetFlt(a, shuffle[i]);
-            p1 = AiArrayGetFlt(a, shuffle[i + 1]);
-            if (p0 > p1)
-            {
-               swapped = true;
-               modified = true;
-
-               tmp = shuffle[i];
-               shuffle[i] = shuffle[i + 1];
-               shuffle[i + 1] = tmp;
-            }
-         }
-      }
+      
+      ComparePositions cmp(a);
+      
+      std::sort(shuffle, shuffle + n, cmp);
    }
-
-   return modified;
 }
 
 void EvalFloatRamp(AtArray *p, AtArray *v, AtArray *i, InterpolationType defi, unsigned int *s, float t, float &out)
