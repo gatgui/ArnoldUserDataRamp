@@ -5,6 +5,16 @@ extern AtNodeMethods* agUserDataFloatRampMtd;
 extern AtNodeMethods* agUserDataVectorRampMtd;
 extern AtNodeMethods* agUserDataColorRampMtd;
 
+namespace SSTR
+{
+   AtString positions("positions");
+   AtString values("values");
+   AtString interpolations("interpolations");
+   AtString default_interpolation("default_interpolation");
+   AtString abort_on_error("abort_on_error");
+   AtString linkable("linkable");
+}
+
 node_loader
 {
    if (i == 0)
