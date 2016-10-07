@@ -1,12 +1,57 @@
 [node userDataVectorRamp]
    maya.classification STRING "utility/userdata"
    maya.id INT 0x001165F3
+   
+   [attr positions]
+      linkable BOOL false
+   
+   [attr values]
+      linkable BOOL false
+   
+   [attr interpolations]
+      linkable BOOL false
+   
+   [attr default_interpolation]
+      linkable BOOL false
+   
+   [attr abort_on_error]
+      linkable BOOL false
 
 [node userDataFloatRamp]
    maya.classification STRING "utility/userdata"
    maya.id INT 0x001165F4
+   
+   [attr positions]
+      linkable BOOL false
+   
+   [attr values]
+      linkable BOOL false
+   
+   [attr interpolations]
+      linkable BOOL false
+   
+   [attr default_interpolation]
+      linkable BOOL false
+   
+   [attr abort_on_error]
+      linkable BOOL false
 
 [node userDataColorRamp]
    maya.classification STRING "utility/userdata"
    maya.id INT 0x001165F5
+   
+   [attr positions]
+      linkable BOOL false
+   
+   [attr values]
+      linkable BOOL false
+   
+   [attr interpolations]
+      linkable BOOL false
+   
+   [attr default_interpolation]
+      linkable BOOL false
+   
+   [attr abort_on_error]
+      linkable BOOL false
 

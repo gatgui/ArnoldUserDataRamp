@@ -32,13 +32,7 @@ node_parameters
    AiParameterEnum(SSTR::default_interpolation, 1, InterpolationTypeNames);
    AiParameterVec("default_value", 1.0f, 0.0f, 1.0f);
    AiParameterBool(SSTR::abort_on_error, false);
-
-   AiMetaDataSetBool(mds, SSTR::positions, SSTR::linkable, false);
-   AiMetaDataSetBool(mds, SSTR::values, SSTR::linkable, false);
-   AiMetaDataSetBool(mds, SSTR::interpolations, SSTR::linkable, false);
-   AiMetaDataSetBool(mds, SSTR::default_interpolation, SSTR::linkable, false);
-   AiMetaDataSetBool(mds, SSTR::abort_on_error, SSTR::linkable, false);
-};
+}
 
 struct NodeData
 {
@@ -47,7 +41,7 @@ struct NodeData
    AtString interpolations;
    InterpolationType defaultInterpolation;
    bool abortOnError;
-};
+}
 
 node_initialize
 {
