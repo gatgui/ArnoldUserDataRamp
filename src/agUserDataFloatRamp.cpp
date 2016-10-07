@@ -41,7 +41,7 @@ struct NodeData
    AtString interpolations;
    InterpolationType defaultInterpolation;
    bool abortOnError;
-}
+};
 
 node_initialize
 {
