@@ -1,46 +1,35 @@
-#include <ai.h>
-#include <cstring>
+#include "common.h"
 
-extern AtNodeMethods* agUserDataFloatRampMtd;
-extern AtNodeMethods* agUserDataVectorRampMtd;
-extern AtNodeMethods* agUserDataColorRampMtd;
-
-namespace SSTR
-{
-   AtString positions("positions");
-   AtString values("values");
-   AtString interpolations("interpolations");
-   AtString default_interpolation("default_interpolation");
-   AtString abort_on_error("abort_on_error");
-   AtString linkable("linkable");
-}
+extern AtNodeMethods* UserDataRampFMtd;
+extern AtNodeMethods* UserDataRampVMtd;
+extern AtNodeMethods* UserDataRampC3Mtd;
 
 node_loader
 {
    if (i == 0)
    {
-      node->name = "userDataVectorRamp";
+      node->name = PREFIX "user_data_ramp_v";
       node->node_type = AI_NODE_SHADER;
       node->output_type = AI_TYPE_VECTOR;
-      node->methods = agUserDataVectorRampMtd;
+      node->methods = UserDataRampVMtd;
       strcpy(node->version, AI_VERSION);
       return true;
    }
    else if (i == 1)
    {
-      node->name = "userDataFloatRamp";
+      node->name = PREFIX "user_data_ramp_f";
       node->node_type = AI_NODE_SHADER;
       node->output_type = AI_TYPE_FLOAT;
-      node->methods = agUserDataFloatRampMtd;
+      node->methods = UserDataRampFMtd;
       strcpy(node->version, AI_VERSION);
       return true;
    }
    else if (i == 2)
    {
-      node->name = "userDataColorRamp";
+      node->name = PREFIX "user_data_ramp_c3";
       node->node_type = AI_NODE_SHADER;
       node->output_type = AI_TYPE_RGB;
-      node->methods = agUserDataColorRampMtd;
+      node->methods = UserDataRampC3Mtd;
       strcpy(node->version, AI_VERSION);
       return true;
    }

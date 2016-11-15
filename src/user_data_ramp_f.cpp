@@ -1,11 +1,12 @@
-#include "agUserDataRampCommon.h"
+#include "common.h"
 
-AI_SHADER_NODE_EXPORT_METHODS(agUserDataFloatRampMtd);
+AI_SHADER_NODE_EXPORT_METHODS(UserDataRampFMtd);
 
-enum FloatRampParams
+enum UserDataRampFParams
 {
    p_input = 0,
    p_positions,
+   p_sort_positions,
    p_values,
    p_interpolations,
    p_default_interpolation,
@@ -13,20 +14,11 @@ enum FloatRampParams
    p_abort_on_error
 };
 
-namespace SSTR
-{
-   extern AtString positions;
-   extern AtString values;
-   extern AtString interpolations;
-   extern AtString default_interpolation;
-   extern AtString abort_on_error;
-   extern AtString linkable;
-}
-
 node_parameters
 {
    AiParameterFlt("input", 0.0f);
    AiParameterStr(SSTR::positions, "");
+   AiParameterBool(SSTR::sort_positions, false);
    AiParameterStr(SSTR::values, "");
    AiParameterStr(SSTR::interpolations, "");
    AiParameterEnum(SSTR::default_interpolation, 1, InterpolationTypeNames);
@@ -41,6 +33,7 @@ struct NodeData
    AtString interpolations;
    InterpolationType defaultInterpolation;
    bool abortOnError;
+   bool sortPositions;
 };
 
 node_initialize
@@ -57,6 +50,7 @@ node_update
    data->interpolations = AiNodeGetStr(node, SSTR::interpolations);
    data->defaultInterpolation = (InterpolationType) AiNodeGetInt(node, SSTR::default_interpolation);
    data->abortOnError = AiNodeGetBool(node, SSTR::abort_on_error);
+   data->sortPositions = AiNodeGetBool(node, SSTR::sort_positions);
 }
 
 node_finish
@@ -71,22 +65,22 @@ static void Failed(AtShaderGlobals *sg, AtNode *node, const char *errMsg, bool a
    {
       if (errMsg)
       {
-         AiMsgError("[userDataFloatRamp] %s", errMsg);
+         AiMsgError("[%suser_data_ramp_f] %s", PREFIX, errMsg);
       }
       else
       {
-         AiMsgError("[userDataFloatRamp] Failed");
+         AiMsgError("[%suser_data_ramp_f] Failed", PREFIX);
       }
    }
    else
    {
       if (errMsg)
       {
-         AiMsgWarning("[userDataFloatRamp] %s. Use default value", errMsg);
+         AiMsgWarning("[%suser_data_ramp_f] %s. Use default value", PREFIX, errMsg);
       }
       else
       {
-         AiMsgWarning("[userDataFloatRamp] Failed. Use default value");
+         AiMsgWarning("[%suser_data_ramp_f] Failed. Use default value", PREFIX);
       }
       sg->out.FLT = AiShaderEvalParamFlt(p_default_value);
    }
@@ -143,9 +137,14 @@ shader_evaluate
       }
    }
    
-   unsigned int *s = (unsigned int*) AiShaderGlobalsQuickAlloc(sg, p->nelements * sizeof(unsigned int));
-   
-   SortPositions(p, s);
-   
-   EvalFloatRamp(p, v, i, data->defaultInterpolation, s, AiShaderEvalParamFlt(p_input), sg->out.FLT);
+   if (data->sortPositions)
+   {
+      unsigned int *s = (unsigned int*) AiShaderGlobalsQuickAlloc(sg, p->nelements * sizeof(unsigned int));
+      SortPositions(p, s);
+      EvalFloatRamp(p, v, i, data->defaultInterpolation, s, AiShaderEvalParamFlt(p_input), sg->out.FLT);
+   }
+   else
+   {
+      EvalFloatRamp(p, v, i, data->defaultInterpolation, AiShaderEvalParamFlt(p_input), sg->out.FLT);
+   }
 }

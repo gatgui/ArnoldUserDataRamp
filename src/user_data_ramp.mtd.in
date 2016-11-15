@@ -1,4 +1,4 @@
-[node userDataVectorRamp]
+[node ${prefix}user_data_ramp_v]
    maya.classification STRING "utility/userdata"
    maya.id INT 0x001165F3
    
@@ -17,7 +17,7 @@
    [attr abort_on_error]
       linkable BOOL false
 
-[node userDataFloatRamp]
+[node ${prefix}user_data_ramp_f]
    maya.classification STRING "utility/userdata"
    maya.id INT 0x001165F4
    
@@ -36,7 +36,7 @@
    [attr abort_on_error]
       linkable BOOL false
 
-[node userDataColorRamp]
+[node ${prefix}user_data_ramp_c3]
    maya.classification STRING "utility/userdata"
    maya.id INT 0x001165F5
    

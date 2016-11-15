@@ -1,5 +1,16 @@
-#include "agUserDataRampCommon.h"
+#include "common.h"
 #include <algorithm>
+
+namespace SSTR
+{
+   AtString positions("positions");
+   AtString values("values");
+   AtString interpolations("interpolations");
+   AtString default_interpolation("default_interpolation");
+   AtString abort_on_error("abort_on_error");
+   AtString linkable("linkable");
+   AtString sort_positions("sort_positions");
+}
 
 // ---
 
@@ -18,8 +29,8 @@ static void GetArrayElement(AtArray *a, unsigned int i, AtRGB &e)
    e = AiArrayGetRGB(a, i);
 }
 
-template <typename T>
-static void EvalRampT(AtArray *p, AtArray *v, AtArray *it, InterpolationType defi, unsigned int *shuffle, float t, T &result)
+template <typename T, typename S>
+static void EvalRampT(AtArray *p, AtArray *v, AtArray *it, InterpolationType defi, const S &shuffle, float t, T &result)
 {
    unsigned int inext = p->nelements;
 
@@ -211,5 +222,36 @@ void EvalVectorRamp(AtArray *p, AtArray *v, AtArray *i, InterpolationType defi, 
 
 void EvalColorRamp(AtArray *p, AtArray *v, AtArray *i, InterpolationType defi, unsigned int *s, float t, AtRGB &out)
 {
+   EvalRampT(p, v, i, defi, s, t, out);
+}
+
+struct IdentitySort
+{
+   inline unsigned int operator[](unsigned int i) const
+   {
+      return i;
+   }
+   
+   inline unsigned int operator[](int i) const
+   {
+      return (unsigned int)i;
+   }
+};
+
+void EvalFloatRamp(AtArray *p, AtArray *v, AtArray *i, InterpolationType defi, float t, float &out)
+{
+   IdentitySort s;
+   EvalRampT(p, v, i, defi, s, t, out);
+}
+
+void EvalVectorRamp(AtArray *p, AtArray *v, AtArray *i, InterpolationType defi, float t, AtVector &out)
+{
+   IdentitySort s;
+   EvalRampT(p, v, i, defi, s, t, out);
+}
+
+void EvalColorRamp(AtArray *p, AtArray *v, AtArray *i, InterpolationType defi, float t, AtRGB &out)
+{
+   IdentitySort s;
    EvalRampT(p, v, i, defi, s, t, out);
 }

@@ -1,11 +1,12 @@
-#include "agUserDataRampCommon.h"
+#include "common.h"
 
-AI_SHADER_NODE_EXPORT_METHODS(agUserDataColorRampMtd);
+AI_SHADER_NODE_EXPORT_METHODS(UserDataRampVMtd);
 
-enum FloatRampParams
+enum UserDataRampVParams
 {
    p_input = 0,
    p_positions,
+   p_sort_positions,
    p_values,
    p_interpolations,
    p_default_interpolation,
@@ -13,24 +14,15 @@ enum FloatRampParams
    p_abort_on_error
 };
 
-namespace SSTR
-{
-   extern AtString positions;
-   extern AtString values;
-   extern AtString interpolations;
-   extern AtString default_interpolation;
-   extern AtString abort_on_error;
-   extern AtString linkable;
-}
-
 node_parameters
 {
    AiParameterFlt("input", 0.0f);
    AiParameterStr(SSTR::positions, "");
+   AiParameterBool(SSTR::sort_positions, false);
    AiParameterStr(SSTR::values, "");
    AiParameterStr(SSTR::interpolations, "");
    AiParameterEnum(SSTR::default_interpolation, 1, InterpolationTypeNames);
-   AiParameterRGB("default_value", 1.0f, 0.0f, 1.0f);
+   AiParameterVec("default_value", 1.0f, 0.0f, 1.0f);
    AiParameterBool(SSTR::abort_on_error, false);
 }
 
@@ -41,6 +33,7 @@ struct NodeData
    AtString interpolations;
    InterpolationType defaultInterpolation;
    bool abortOnError;
+   bool sortPositions;
 };
 
 node_initialize
@@ -57,6 +50,7 @@ node_update
    data->interpolations = AiNodeGetStr(node, SSTR::interpolations);
    data->defaultInterpolation = (InterpolationType) AiNodeGetInt(node, SSTR::default_interpolation);
    data->abortOnError = AiNodeGetBool(node, SSTR::abort_on_error);
+   data->sortPositions = AiNodeGetBool(node, SSTR::sort_positions);
 }
 
 node_finish
@@ -71,31 +65,31 @@ static void Failed(AtShaderGlobals *sg, AtNode *node, const char *errMsg, bool a
    {
       if (errMsg)
       {
-         AiMsgError("[userDataColorRamp] %s", errMsg);
+         AiMsgError("[%suser_data_ramp_v] %s", PREFIX, errMsg);
       }
       else
       {
-         AiMsgError("[userDataColorRamp] Failed");
+         AiMsgError("[%suser_data_ramp_v] Failed", PREFIX);
       }
    }
    else
    {
       if (errMsg)
       {
-         AiMsgWarning("[userDataColorRamp] %s. Use default value", errMsg);
+         AiMsgWarning("[%suser_data_ramp_v] %s. Use default value", PREFIX, errMsg);
       }
       else
       {
-         AiMsgWarning("[userDataColorRamp] Failed. Use default value");
+         AiMsgWarning("[%suser_data_ramp_v] Failed. Use default value", PREFIX);
       }
-      sg->out.RGB = AiShaderEvalParamRGB(p_default_value);
+      sg->out.VEC = AiShaderEvalParamVec(p_default_value);
    }
 }
 
 shader_evaluate
 {
    NodeData *data = (NodeData*) AiNodeGetLocalData(node);
-
+   
    AtArray *p, *v, *i=0;
    
    if (!AiUDataGetArray(data->positions, &p))
@@ -116,9 +110,9 @@ shader_evaluate
       return;
    }
    
-   if (v->type != AI_TYPE_RGB)
+   if (v->type != AI_TYPE_VECTOR && v->type != AI_TYPE_POINT)
    {
-      Failed(sg, node, "Values user attribute must be an array of colors", data->abortOnError);
+      Failed(sg, node, "Values user attribute must be an array of vectors/points", data->abortOnError);
       return;
    }
    
@@ -143,9 +137,14 @@ shader_evaluate
       }
    }
    
-   unsigned int *s = (unsigned int*) AiShaderGlobalsQuickAlloc(sg, p->nelements * sizeof(unsigned int));
-   
-   SortPositions(p, s);
-   
-   EvalColorRamp(p, v, i, data->defaultInterpolation, s, AiShaderEvalParamFlt(p_input), sg->out.RGB);
+   if (data->sortPositions)
+   {
+      unsigned int *s = (unsigned int*) AiShaderGlobalsQuickAlloc(sg, p->nelements * sizeof(unsigned int));
+      SortPositions(p, s);
+      EvalVectorRamp(p, v, i, data->defaultInterpolation, s, AiShaderEvalParamFlt(p_input), sg->out.VEC);
+   }
+   else
+   {
+      EvalVectorRamp(p, v, i, data->defaultInterpolation, AiShaderEvalParamFlt(p_input), sg->out.VEC);
+   }
 }
