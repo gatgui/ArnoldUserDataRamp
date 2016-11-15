@@ -5,6 +5,9 @@
    [attr positions]
       linkable BOOL false
    
+   [attr sort_positions]
+      linkable BOOL false
+   
    [attr values]
       linkable BOOL false
    
@@ -24,6 +27,9 @@
    [attr positions]
       linkable BOOL false
    
+   [attr sort_positions]
+      linkable BOOL false
+   
    [attr values]
       linkable BOOL false
    
@@ -41,6 +47,9 @@
    maya.id INT 0x001165F5
    
    [attr positions]
+      linkable BOOL false
+   
+   [attr sort_positions]
       linkable BOOL false
    
    [attr values]
