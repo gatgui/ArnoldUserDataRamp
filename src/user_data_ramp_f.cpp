@@ -50,7 +50,7 @@ node_parameters
    AiParameterBool(SSTR::abort_on_error, false);
 }
 
-struct NodeData
+struct UserDataRampFData
 {
    AtString positions;
    AtString values;
@@ -62,12 +62,12 @@ struct NodeData
 
 node_initialize
 {
-   AiNodeSetLocalData(node, new NodeData());
+   AiNodeSetLocalData(node, new UserDataRampFData());
 }
 
 node_update
 {
-   NodeData *data = (NodeData*) AiNodeGetLocalData(node);
+   UserDataRampFData *data = (UserDataRampFData*) AiNodeGetLocalData(node);
    
    data->positions = AiNodeGetStr(node, SSTR::positions);
    data->values = AiNodeGetStr(node, SSTR::values);
@@ -79,7 +79,7 @@ node_update
 
 node_finish
 {
-   NodeData *data = (NodeData*) AiNodeGetLocalData(node);
+   UserDataRampFData *data = (UserDataRampFData*) AiNodeGetLocalData(node);
    delete data;
 }
 
@@ -112,7 +112,7 @@ static void Failed(AtShaderGlobals *sg, AtNode *node, const char *errMsg, bool a
 
 shader_evaluate
 {
-   NodeData *data = (NodeData*) AiNodeGetLocalData(node);
+   UserDataRampFData *data = (UserDataRampFData*) AiNodeGetLocalData(node);
 
    AtArray *p, *v, *i=0;
    
