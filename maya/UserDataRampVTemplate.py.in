@@ -1,0 +1,21 @@
+import pymel.core as pm
+from mtoa.ui.ae.shaderTemplate import ShaderAETemplate
+
+class AE@RAMPV_MAYA_NODENAME@Template(ShaderAETemplate):
+   def setup(self):
+      self.beginScrollLayout()
+      
+      self.beginLayout("Parameters", collapse=False)
+      self.addControl("input")
+      self.addControl("positions")
+      self.addControl("values")
+      self.addControl("interpolations")
+      self.addControl("default_interpolation")
+      self.addControl("default_value")
+      self.addControl("abort_on_error")
+      self.endLayout()
+      
+      pm.mel.AEdependNodeTemplate(self.nodeName)
+      self.addExtraControls()
+      self.endScrollLayout()
+

@@ -2,7 +2,9 @@
 /debug/
 /eco/
 /.build/
+/src/*.mtd
+/maya/*.py
 *.dblite
+*.config
 excons.cache
-src/*.mtd
 user_data_ramp.env.tmp
