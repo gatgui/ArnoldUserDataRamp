@@ -22,9 +22,9 @@ rampf_maya_name = toMayaName(prefix + "user_data_ramp_f")
 rampv_maya_name = toMayaName(prefix + "user_data_ramp_v")
 rampc3_maya_name = toMayaName(prefix + "user_data_ramp_c3")
 opts = {"PREFIX": prefix,
-        "RAMPF_MAYA_NODENAME": rampf_maya_name,
-        "RAMPV_MAYA_NODENAME": rampv_maya_name,
-        "RAMPC3_MAYA_NODENAME": rampc3_maya_name}
+        "USERDATARAMPF_MAYA_NODENAME": rampf_maya_name,
+        "USERDATARAMPV_MAYA_NODENAME": rampv_maya_name,
+        "USERDATARAMPC3_MAYA_NODENAME": rampc3_maya_name}
 
 GenerateMtd = excons.config.AddGenerator(env, "mtd", opts)
 GenerateMayaAE = excons.config.AddGenerator(env, "mayaAE", opts)
