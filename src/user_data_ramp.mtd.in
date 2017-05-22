@@ -1,7 +1,7 @@
 [node @PREFIX@user_data_ramp_v]
    maya.classification STRING "utility/userdata"
    maya.id INT 0x001165F3
-   maya.name STRING @USERDATARAMPV_MAYA_NODENAME@
+   maya.name STRING "@USERDATARAMPV_MAYA_NODENAME@"
    
    [attr positions]
       linkable BOOL false
@@ -24,7 +24,7 @@
 [node @PREFIX@user_data_ramp_f]
    maya.classification STRING "utility/userdata"
    maya.id INT 0x001165F4
-   maya.name STRING @USERDATARAMPF_MAYA_NODENAME@
+   maya.name STRING "@USERDATARAMPF_MAYA_NODENAME@"
    
    [attr positions]
       linkable BOOL false
@@ -47,7 +47,7 @@
 [node @PREFIX@user_data_ramp_c3]
    maya.classification STRING "utility/userdata"
    maya.id INT 0x001165F5
-   maya.name STRING @USERDATARAMPC3_MAYA_NODENAME@
+   maya.name STRING "@USERDATARAMPC3_MAYA_NODENAME@"
    
    [attr positions]
       linkable BOOL false
