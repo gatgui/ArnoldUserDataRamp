@@ -106,7 +106,7 @@ static void Failed(AtShaderGlobals *sg, AtNode *node, const char *errMsg, bool a
       {
          AiMsgWarning("[%suser_data_ramp_f] Failed. Use default value", PREFIX);
       }
-      sg->out.FLT = AiShaderEvalParamFlt(p_default_value);
+      sg->out.FLT() = AiShaderEvalParamFlt(p_default_value);
    }
 }
 
@@ -116,45 +116,45 @@ shader_evaluate
 
    AtArray *p, *v, *i=0;
    
-   if (!AiUDataGetArray(data->positions, &p))
+   if (!AiUDataGetArray(data->positions, p))
    {
       Failed(sg, node, "Positions user attribute not found or not an array", data->abortOnError);
       return;
    }
    
-   if (p->type != AI_TYPE_FLOAT)
+   if (AiArrayGetType(p) != AI_TYPE_FLOAT)
    {
       Failed(sg, node, "Positions user attribute must be an array of floats", data->abortOnError);
       return;
    }
    
-   if (!AiUDataGetArray(data->values, &v))
+   if (!AiUDataGetArray(data->values, v))
    {
       Failed(sg, node, "Values user attribute not found or not an array", data->abortOnError);
       return;
    }
    
-   if (v->type != AI_TYPE_FLOAT)
+   if (AiArrayGetType(v) != AI_TYPE_FLOAT)
    {
       Failed(sg, node, "Values user attribute must be an array of floats", data->abortOnError);
       return;
    }
    
-   if (v->nelements != p->nelements)
+   if (AiArrayGetNumElements(v) != AiArrayGetNumElements(p))
    {
       Failed(sg, node, "Positions and values array size mismatch", data->abortOnError);
       return;
    }
    
-   if (AiUDataGetArray(data->interpolations, &i))
+   if (AiUDataGetArray(data->interpolations, i))
    {
-      if (i->type != AI_TYPE_ENUM && i->type != AI_TYPE_INT)
+      if (AiArrayGetType(i) != AI_TYPE_ENUM && AiArrayGetType(i) != AI_TYPE_INT)
       {
          Failed(sg, node, "Interpolations user attribute must be an array of enums or ints", data->abortOnError);
          return;
       }
       
-      if (i->nelements != p->nelements)
+      if (AiArrayGetNumElements(i) != AiArrayGetNumElements(p))
       {
          Failed(sg, node, "Positions and interpolations array size mismatch", data->abortOnError);
          return;
@@ -163,12 +163,12 @@ shader_evaluate
    
    if (data->sortPositions)
    {
-      unsigned int *s = (unsigned int*) AiShaderGlobalsQuickAlloc(sg, p->nelements * sizeof(unsigned int));
+      unsigned int *s = (unsigned int*) AiShaderGlobalsQuickAlloc(sg, AiArrayGetNumElements(p) * sizeof(unsigned int));
       SortPositions(p, s);
-      EvalFloatRamp(p, v, i, data->defaultInterpolation, s, AiShaderEvalParamFlt(p_input), sg->out.FLT);
+      EvalFloatRamp(p, v, i, data->defaultInterpolation, s, AiShaderEvalParamFlt(p_input), sg->out.FLT());
    }
    else
    {
-      EvalFloatRamp(p, v, i, data->defaultInterpolation, AiShaderEvalParamFlt(p_input), sg->out.FLT);
+      EvalFloatRamp(p, v, i, data->defaultInterpolation, AiShaderEvalParamFlt(p_input), sg->out.FLT());
    }
 }
