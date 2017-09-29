@@ -24,9 +24,9 @@ SOFTWARE.
 
 #include "common.h"
 
-extern AtNodeMethods* UserDataRampFMtd;
-extern AtNodeMethods* UserDataRampVMtd;
-extern AtNodeMethods* UserDataRampC3Mtd;
+extern const AtNodeMethods* UserDataRampFMtd;
+extern const AtNodeMethods* UserDataRampVMtd;
+extern const AtNodeMethods* UserDataRampC3Mtd;
 
 node_loader
 {
