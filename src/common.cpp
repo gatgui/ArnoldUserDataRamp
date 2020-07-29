@@ -56,9 +56,9 @@ static void GetArrayElement(AtArray *a, unsigned int i, AtRGB &e)
 template <typename T, typename S>
 static void EvalRampT(AtArray *p, AtArray *v, AtArray *it, InterpolationType defi, const S &shuffle, float t, T &result)
 {
-   unsigned int inext = p->nelements;
+   unsigned int inext = AiArrayGetNumElements(p);
 
-   for (unsigned int i = 0; (i < p->nelements); ++i)
+   for (unsigned int i = 0; (i < AiArrayGetNumElements(p)); ++i)
    {
       if (t < AiArrayGetFlt(p, shuffle[i]))
       {
@@ -67,9 +67,9 @@ static void EvalRampT(AtArray *p, AtArray *v, AtArray *it, InterpolationType def
       }
    }
 
-   if (inext >= p->nelements)
+   if (inext >= AiArrayGetNumElements(p))
    {
-      GetArrayElement(v, shuffle[p->nelements - 1], result);
+      GetArrayElement(v, shuffle[AiArrayGetNumElements(p) - 1], result);
       return;
    }
 
@@ -157,7 +157,7 @@ static void EvalRampT(AtArray *p, AtArray *v, AtArray *it, InterpolationType def
          t1 = sy / sx;
          
          // Compute end tangent
-         if (inext+1 >= p->nelements)
+         if (inext+1 >= AiArrayGetNumElements(p))
          {
             p3 = p2 + dp;
             v3 = v2;
@@ -219,9 +219,9 @@ private:
 
 void SortPositions(AtArray *a, unsigned int *shuffle)
 {
-   if (a && shuffle && a->nelements > 0)
+   if (a && shuffle && AiArrayGetNumElements(a) > 0)
    {
-      unsigned int n = a->nelements;
+      unsigned int n = AiArrayGetNumElements(a);
       
       for (unsigned int i=0; i<n; ++i)
       {
